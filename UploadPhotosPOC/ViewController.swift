@@ -40,16 +40,16 @@ class ViewController: UIViewController {
     
     @IBAction func uploadPhoto(_ sender: Any) {
         
-        let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+        let alert = UIAlertController(title: "Adicionar Foto", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Câmera", style: .default, handler: { _ in
             self.openCamera()
         }))
         
-        alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
+        alert.addAction(UIAlertAction(title: "Galeria", style: .default, handler: { _ in
             self.openGallary()
         }))
         
-        alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction.init(title: "Cancelar", style: .cancel, handler: nil))
         
         switch UIDevice.current.userInterfaceIdiom {
         case .pad:
@@ -71,7 +71,7 @@ class ViewController: UIViewController {
         }
         else
         {
-            let alert  = UIAlertController(title: "Warning", message: "You don't have camera", preferredStyle: .alert)
+            let alert  = UIAlertController(title: "Atenção", message: "Câmera não disponível!", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
