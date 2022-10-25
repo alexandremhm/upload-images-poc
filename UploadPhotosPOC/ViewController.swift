@@ -9,8 +9,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    weak var imgProfile: UIImage!
-    
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var uploadPhotoButton: UIButton!
     
@@ -28,7 +26,7 @@ class ViewController: UIViewController {
             switch result {
             case .success(let images):
                 DispatchQueue.main.async {
-                    let url = images[2].url
+                    let url = images[9].url
                     guard let urlImage = URL(string: url) else { return }
                     self.image.load(urlImage, placeholder: UIImage(named: "imageplace"))
                 }
@@ -37,6 +35,7 @@ class ViewController: UIViewController {
             }
         }
     }
+    
     
     @IBAction func uploadPhoto(_ sender: Any) {
         
@@ -63,8 +62,7 @@ class ViewController: UIViewController {
     }
     
     func openCamera() {
-        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera))
-        {
+        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)) {
             imagePicker.sourceType = UIImagePickerController.SourceType.camera
             imagePicker.allowsEditing = true
             self.present(imagePicker, animated: true, completion: nil)
@@ -87,29 +85,29 @@ class ViewController: UIViewController {
         let boundary = UUID().uuidString
         return boundary
     }
-        
     
     func generateImageData(fileName: String, boundary: String, image: UIImage, paramName: String) -> Data {
+        let imageCompression = image.compress(to: 300)
         var data = Data()
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
         data.append("Content-Disposition: form-data; name=\"\(paramName)\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
         data.append("Content-Type: image/png\r\n\r\n".data(using: .utf8)!)
-        data.append(image.pngData()!)
+        data.append(imageCompression)
         data.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
         
         return data
     }
 }
 
-extension ViewController:  UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+extension ViewController:  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage{
+        if let editedImage = info[.editedImage] as? UIImage{
             let boundary = self.generateBoundary()
             let data = self.generateImageData(fileName: "ofallon-brewery-maryland-heights2", boundary: boundary, image: editedImage, paramName: "file")
             self.viewModel.uploadImage(data: data, boundary: boundary, breweryId: "ofallon-brewery-maryland-heights")
-            }
+        }
         picker.dismiss(animated: true, completion: nil)
     }
     
@@ -117,6 +115,5 @@ extension ViewController:  UIImagePickerControllerDelegate, UINavigationControll
         picker.isNavigationBarHidden = false
         self.dismiss(animated: true, completion: nil)
     }
-    
 }
 
